@@ -27,5 +27,6 @@ export const getUser = async (request, response) => {
 		.select()
 		.ilike("name", "%João%");
 
+		console.log("teste")
 	return response.send(data);
 };
