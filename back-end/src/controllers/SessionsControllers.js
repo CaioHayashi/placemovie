@@ -1,30 +1,42 @@
 import supabase from "../../db/supabase.js";
+import jwt from "jsonwebtoken";
 import pkg from "bcryptjs";
-import jwt from "jsonwebtoken"
-
 const { compareSync } = pkg;
 
 export const createSession = async (request, response) => {
 	const { email, password } = request.body;
 
-	//procura no banco algum usuário com esse email
-	const { data: user, error } = await supabase
+	console.log("Dados de login:", { email, password });
+
+	if (!password || !email)
+		return response.status(401).send({ msg: "campos vazios" });
+
+	// Procura no banco algum usuário com esse email
+	const { data: users, error } = await supabase
 		.from("users")
 		.select("*")
-		.eq("email", email)
-		.single();
+		.eq("email", email);
 
 	if (error) {
-		return response.json({ msg: "email incorreto" });
+		// Caso ocorra um erro na consulta
+		console.log("Erro ao buscar o usuário:", error);
+		return response.status(500).json({ msg: "Erro ao buscar usuário" });
 	}
 
-	//compara a senha criptografada com a passada
-	const passwordMathed = compareSync(password, user.password);
-
-	if (!passwordMathed) {
-		return response.json({ msg: "senha incorreta" });
+	if (!users || users.length === 0) {
+		return response.status(401).json({ msg: "email incorreto" });
 	}
-	//gera um token de autenticação
+
+	const user = users[0];
+
+	// Compara a senha criptografada com a passada
+	const passwordMatched = compareSync(password, user.password);
+
+	if (!passwordMatched) {
+		return response.status(401).json({ msg: "senha incorreta" });
+	}
+
+	// Gera um token de autenticação
 	const token = jwt.sign({}, process.env.SECRET_JWT, {
 		subject: String(user.id),
 		expiresIn: "1d"
