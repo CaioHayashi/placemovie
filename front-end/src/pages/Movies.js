@@ -48,6 +48,8 @@ export const Movies = () => {
 			exit={{ opacity: 0, x: -100 }}
 			transition={{ duration: 0.5 }}
 		>
+			<BgImage src={bg} />
+
 			<NavBar />
 
 			<SectionSearch>
@@ -91,6 +93,26 @@ export const Movies = () => {
 	);
 };
 
+const BgImage = styled.img`
+	position: fixed;
+	background-position: fixed;
+	width: 100vw;
+	height: 100vh;
+	object-fit: cover;
+	z-index: -2;
+	top: 0;
+	left: 0;
+`;
+
+const Page = styled(motion.div)`
+	display: flex;
+	position: relative;
+	flex-direction: column;
+	min-height: 100vh;
+	color: white;
+	padding: 20px 5%;
+`;
+
 const Grid = styled.div`
 	display: grid;
 	grid-template-columns: repeat(
@@ -101,7 +123,7 @@ const Grid = styled.div`
 	width: 100%; /* Garante que o grid ocupe toda a largura disponível */
 	margin: 0 auto;
 	justify-content: center; /* Centraliza o conteúdo horizontalmente */
-  justify-items: center;
+	justify-items: center;
 	gap: 16px;
 `;
 
@@ -109,18 +131,6 @@ const SectionSearch = styled.section`
 	max-width: 1200px; /* Defina uma largura máxima */
 	padding: 40px;
 	max-width: 500px;
-`;
-
-const Page = styled(motion.div)`
-	display: flex;
-	flex-direction: column;
-	min-height: 100%;
-	background-image: url(${bg}); /* Adicione o URL da imagem de fundo */
-	background-size: cover;
-	background-position: center;
-	background-attachment: fixed;
-	color: white;
-	padding: 20px 5%;
 `;
 
 export default Movies;

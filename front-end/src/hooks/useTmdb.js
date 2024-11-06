@@ -31,7 +31,12 @@ export const getMovies = async (page = 1, search) => {
 
 export const getMovieDetails = async (id) => {
 	try {
-		const response = await tmdbApi.get(`/movie/${id}`);
+		const response = await tmdbApi.get(`/movie/${id}`, {
+			params: {
+				append_to_response: "videos,watch/providers",
+				language: "pt-BR"
+			}
+		});
 		return response.data;
 	} catch (error) {
 		console.error("Erro ao buscar detalhes do filme:", error);

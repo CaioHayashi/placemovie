@@ -31,6 +31,8 @@ export const Home = () => {
 	);
 };
 
+
+
 const Page = styled(motion.div)`
 	display: flex;
 	flex-direction: column;
