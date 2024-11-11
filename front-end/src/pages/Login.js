@@ -38,8 +38,8 @@ const Login = () => {
 			transition={{ duration: 0.5 }}
 		>
 			<ContainerForm onSubmit={handleLogin}>
-				<h1 style={{ color: "var(--quaternary)" }}>
-					Já tem cadastro? Digite se email e senha{" "}
+				<h1 style={{ color: "var(--tertiary)" }}>
+					Já tem cadastro? Digite seu email e senha{" "}
 				</h1>
 
 				<ContainerInput>
@@ -66,7 +66,8 @@ const Login = () => {
 			<ContainerBanner>
 				<Logo width={"200px"} />
 				<TextBanner>
-					Yorem ipsum dolor sit amet, consectetur adipiscing elit.
+					Faça login e continue explorando o
+					universo dos filmes que você ama!
 				</TextBanner>
 
 				<p>
@@ -122,8 +123,8 @@ const ContainerInput = styled.div`
 const TextBanner = styled.h1`
 	margin-top: 30px;
 	color: var(--quaternary);
-	font-size: 48px;
-	font-weight: bolder;
+	font-size: 32px;
+	font-weight: normal;
 `;
 
 export default Login;

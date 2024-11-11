@@ -1,20 +1,21 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { NavLink, useParams } from "react-router-dom";
 import { getMovieDetails } from "../hooks/useTmdb";
 import styled from "styled-components";
 import { motion } from "framer-motion";
 import { Loading } from "./Loading";
-import { Button } from "../components/Button";
 import { FormatCurrency } from "../hooks/FormatCurrency";
 import { TextDetails } from "../components/TextDetails";
 import { Comments } from "../components/Comments";
+import LikeButton from "../components/LikeButton";
+import { useAuth } from "../hooks/useAuth";
 
 const MoviesDetails = () => {
+	const { user } = useAuth();
 	const { id } = useParams();
 	const [movie, setMovie] = useState(null);
 
 	const imageBaseUrl = "https://image.tmdb.org/t/p/original";
-	// const imagePosterUrl = "https://image.tmdb.org/t/p/w300";
 	const providers = movie?.["watch/providers"]?.results?.BR?.flatrate;
 	const trailer = movie?.videos.results[0]; // Pega o primeiro trailer
 
@@ -40,25 +41,42 @@ const MoviesDetails = () => {
 		>
 			<BgImage src={`${imageBaseUrl}${movie.backdrop_path}`} />
 			<Banner>
-				<BannerText>
-					<h1 style={{ fontSize: "56px" }}>{movie.title}</h1>
-					<p style={{ fontWeight: "bold" }}>
-						{movie.genres.map((genre) => genre.name).join(" - ")}
-					</p>
-					<p style={{ width: "50%", fontSize: "24px" }}>
-						{movie.overview}
-					</p>
-					<Providers>
-						{providers?.map((provider) => (
-							<div key={provider.id}>
-								<img
-									src={`${imageBaseUrl}${provider.logo_path}`}
-									alt={provider.provider_id}
-								/>
-							</div>
-						))}
-					</Providers>
-				</BannerText>
+				<Line>
+					<BannerText>
+						<h1 style={{ fontSize: "56px" }}>{movie.title}</h1>
+						<p style={{ fontWeight: "bold" }}>
+							{movie.genres
+								.map((genre) => genre.name)
+								.join(" - ")}
+						</p>
+						<p style={{ width: "50%", fontSize: "24px" }}>
+							{movie.overview}
+						</p>
+						<Providers>
+							{providers?.map((provider) => (
+								<div key={provider.id}>
+									<img
+										src={`${imageBaseUrl}${provider.logo_path}`}
+										alt={provider.provider_id}
+									/>
+								</div>
+							))}
+						</Providers>
+					</BannerText>
+					<Like>
+						{!user && (
+							<NavLink to="/login">
+								Entre para curtir e adicionar filmes à sua
+								lista!
+							</NavLink>
+						)}
+						<LikeButton
+							movieId={id}
+							userId={user?.id}
+							disabled={!user}
+						/>
+					</Like>
+				</Line>
 			</Banner>
 
 			<About>
@@ -104,9 +122,12 @@ const MoviesDetails = () => {
 					/>
 				</GridData>
 			</About>
-			<ContainerComennts>
-				<Comments />
-			</ContainerComennts>
+
+			{id && (
+				<ContainerComennts>
+					<Comments movieId={id} />
+				</ContainerComennts>
+			)}
 		</Page>
 	);
 };
@@ -134,7 +155,7 @@ const Banner = styled(motion.section)`
 	flex-direction: column;
 	justify-content: end;
 	align-items: start;
-	padding: 5%;
+	padding: 5% 10%;
 	width: 100%;
 	min-height: 100vh;
 	background-size: cover;
@@ -147,6 +168,11 @@ const BannerText = styled(motion.div)`
 	flex-direction: column;
 	gap: 20px;
 `;
+
+const Line = styled.div`
+	display: flex;
+	align-items: end;
+`
 
 const Providers = styled.div`
 	display: flex;
@@ -173,5 +199,10 @@ const GridData = styled.div`
 const ContainerComennts = styled.section`
 	background-color: var(--primary-t);
 `;
+
+const Like = styled.div `
+	position: fixed;
+	right: 10%;
+`
 
 export default MoviesDetails;

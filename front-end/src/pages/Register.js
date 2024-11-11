@@ -28,7 +28,7 @@ export const Register = () => {
 				console.log(email, password);
 				await signIn({ email, password });
 
-				navegate("/");
+				navegate(-1);
 			}
 		} catch (error) {
 			console.error(
@@ -48,21 +48,30 @@ export const Register = () => {
 			<ContainerBanner>
 				<Logo width={"200px"} />
 				<TextBanner>
-					Yorem ipsum dolor sit amet, consectetur adipiscing elit.
+					Cadastre-se e comece sua jornada cinematográfica
+					personalizada – encontre, salve e compartilhe seus filmes
+					favoritos!
 				</TextBanner>
+				<p>
+					Já é cadastrado?{" "}
+					<NavLink to="/login" style={{ color: "var(--secondary)" }}>
+						clique aqui
+					</NavLink>
+				</p>
 			</ContainerBanner>
 
 			<ContainerForm onSubmit={handleRegister}>
-				<h1 style={{ color: "var(--quaternary)" }}>
+				<h1 style={{ color: "var(--tertiary)" }}>
 					Não tem cadastro? Digite nome, email e senha
 				</h1>
+
 				<ContainerInput>
-					<label>Nome:</label>
+					<label>Nome de usuário:</label>
 					<Input
 						type="text"
 						value={name}
 						onChange={(e) => setName(e.target.value)}
-						placeholder="Digite seu nome"
+						placeholder="Digite seu usuário"
 					/>
 				</ContainerInput>
 
@@ -85,14 +94,6 @@ export const Register = () => {
 					/>
 				</ContainerInput>
 				<Button type="submit">Cadastrar</Button>
-
-				{/* {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>} */}
-				<p>
-					Já é cadastrado?{" "}
-					<NavLink to="/login" style={{ color: "var(--secondary)" }}>
-						clique aqui
-					</NavLink>
-				</p>
 			</ContainerForm>
 		</Page>
 	);
@@ -138,6 +139,6 @@ const ContainerInput = styled.div`
 const TextBanner = styled.h1`
 	margin-top: 30px;
 	color: var(--quaternary);
-	font-size: 48px;
-	font-weight: bolder;
+	font-size: 32px;
+	font-weight: normal;
 `;

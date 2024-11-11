@@ -4,7 +4,7 @@ import styled from "styled-components";
 import NavBar from "../components/NavBar";
 import { getMovies } from "../hooks/useTmdb";
 import { TextButton } from "../components/TextButton";
-import bg from "../assets/bg-movies.png";
+import bg from "../assets/bg_movies.png";
 import { Input } from "../components/Input";
 import { useNavigate } from "react-router-dom";
 
@@ -76,8 +76,10 @@ export const Movies = () => {
 							alt={movie.title}
 							style={{ borderRadius: "14px", height: "300px" }}
 						/>
-						<div>{movie.title}</div>
-						<div>{movie.id}</div>
+						<CardContent>
+							<p>{movie.title}</p>
+							<div>{movie.vote_}</div>
+						</CardContent>
 					</div>
 				))}
 			</Grid>
@@ -98,6 +100,7 @@ const BgImage = styled.img`
 	background-position: fixed;
 	width: 100vw;
 	height: 100vh;
+	opacity: .4;
 	object-fit: cover;
 	z-index: -2;
 	top: 0;
@@ -124,7 +127,7 @@ const Grid = styled.div`
 	margin: 0 auto;
 	justify-content: center; /* Centraliza o conteúdo horizontalmente */
 	justify-items: center;
-	gap: 16px;
+	gap: 12px;
 `;
 
 const SectionSearch = styled.section`
@@ -133,4 +136,9 @@ const SectionSearch = styled.section`
 	max-width: 500px;
 `;
 
+const CardContent = styled.div`
+	padding: 4px;
+	width: 100%;
+	font-size: .8rem
+`
 export default Movies;

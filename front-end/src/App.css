@@ -1,30 +1,43 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
 
 * {
-  padding: 0;
-  margin: 0;
-  box-sizing: border-box;
-  text-decoration: none;
-  border: none;
-  font-family: "Montserrat", sans-serif;
+	padding: 0;
+	margin: 0;
+	box-sizing: border-box;
+	text-decoration: none;
+	border: none;
+	font-family: "Montserrat", sans-serif;
 }
 
 body {
-  background-color: var(--primary);
-  color: white;
+	overscroll-behavior-y: none;
+	background-image: linear-gradient(
+		90deg,
+		var(--primary) 0%,
+		#161b2a 50%,
+		var(--primary) 100%
+	);
+	color: white;
 }
 
-a, link {
-  text-decoration: none;
-  color: var(--tertiary);
+a,
+link {
+	text-decoration: none;
+	color: var(--tertiary);
 }
 
 :root {
-  --primary: #00091B;
-  --secondary: #EE2E3B;
-  --tertiary: #EDF2F5;
-  --quaternary: #8D99AF;
-  --quinary: #D82926;
+	--primary: #00091b;
+	--secondary: #ee2e3b;
+	--tertiary: #edf2f5;
+	--quaternary: #8d99af;
+	--quinary: #d82926;
 
-  --primary-t: #00091BCC
+	--grayDark: #0a111e;
+
+	--primary-t: #00091bcc;
+	--secondary-t: #ee2e3b56;
+	--quaternary-t: #8d99af14;
+
+	--disabled: #7c8390;
 }

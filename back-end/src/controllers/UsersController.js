@@ -4,9 +4,9 @@ import pkg from "bcryptjs";
 const { hashSync } = pkg;
 
 export const createUser = async (request, response) => {
-	const { name, email, password } = request.body;
+	const { username, email, password } = request.body;
 
-	if(!name || !email || !password) {
+	if(!username || !email || !password) {
 		return response.status(400).json({ msg: "preencha todos os campos" });
 	}
 
@@ -14,7 +14,7 @@ export const createUser = async (request, response) => {
 
 	const { data: user, error } = await supabase
 		.from("users")
-		.insert([{ name, email, password: passwordHashed }])
+		.insert([{ username, email, password: passwordHashed }])
 		.select("*");
 	if (error) {
 		console.log(error);

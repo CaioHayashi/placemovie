@@ -1,9 +1,13 @@
 import React from "react";
 import styled from "styled-components";
 
-export const Button = ({ children, width, onClick }) => {
+export const Button = ({ children, width, onClick, disabled }) => {
 	return (
-		<Container onClick={onClick} style={{ width: width }}>
+		<Container
+			disabled={disabled}
+			onClick={onClick}
+			style={{ width: width }}
+		>
 			{children}
 		</Container>
 	);
@@ -11,9 +15,10 @@ export const Button = ({ children, width, onClick }) => {
 
 const Container = styled.button`
 	width: 100%;
-	height: 54px;
 	padding: 16px;
-	background-color: var(--secondary);
+	font-size: 12px;
+	background-color: ${(props) =>
+		props.disabled ? "var(--disabled)" : "var(--secondary)"};
 	border-radius: 14px;
 	color: white;
 	text-transform: uppercase;

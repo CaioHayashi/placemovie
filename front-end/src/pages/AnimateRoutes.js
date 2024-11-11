@@ -6,6 +6,8 @@ import { Register } from "./Register";
 import { Home } from "./Home";
 import Movies from "./Movies";
 import MoviesDetails from "./MoviesDetails";
+import { Profile } from "./Profile";
+
 
 export const AnimateRoutes = () => {
 	const location = useLocation();
@@ -17,6 +19,7 @@ export const AnimateRoutes = () => {
 				<Route path="/" element={<Home />} />
 				<Route path="/movies" element={<Movies />} />
 				<Route path="/movies/:id" element={<MoviesDetails />} />
+				<Route path="/profile/*" element={<Profile />} />
 			</Routes>
 		</AnimatePresence>
 	);
