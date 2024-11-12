@@ -2,13 +2,13 @@ import supabase from "../../db/supabase.js";
 
 export const createComment = async (request, response) => {
 	const { content, id_user, id_movie_ref } = request.body;
-
+	console.log(content, id_user, id_movie_ref)
 	if (!content || !id_user || !id_movie_ref) {
 		return response.status(401).json({ msg: "preencha todos os campos" });
 	}
 
 	const { data, error } = await supabase
-		.from("comments")
+		.from("movies_comments")
 		.insert([{ content, id_user, id_movie_ref }])
 		.select("*");
 
@@ -24,7 +24,7 @@ export const getComments = async (request, response) => {
 		const { id_movie_ref: movieId } = request.query; // Acessa o query param
 
 		const { data: comments, error } = await supabase
-			.from("comments")
+			.from("movies_comments")
 			.select("*, users(username)")
 			.eq("id_movie_ref", movieId)
 			.order("created_at", { ascending: false });

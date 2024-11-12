@@ -5,15 +5,15 @@ import styled from "styled-components";
 const NavBar = () => {
 	return (
 		<Container>
-			<NavLink to="/" style={{ padding: "12px" }}>
-				INICIO
-			</NavLink>
-			<NavLink to="/movies" style={{ padding: "12px" }}>
+			<StyledNavLink exact="true" to="/">
+				TENDÊNCIAS
+			</StyledNavLink>
+			<StyledNavLink exact="true" to="/movies">
 				FILMES
-			</NavLink>
-			<NavLink to="/movies" style={{ padding: "12px" }}>
+			</StyledNavLink>
+			<StyledNavLink exact="true" to="/series">
 				SERIES
-			</NavLink>
+			</StyledNavLink>
 		</Container>
 	);
 };
@@ -24,6 +24,17 @@ const Container = styled.div`
 	align-items: center;
 	gap: 20px;
 	color: white;
+`;
+
+const StyledNavLink = styled(NavLink)`
+	padding: 12px;
+	text-decoration: none;
+	color: white;
+
+	&.active {
+		font-weight: bold;
+		color: var(--secondary)
+	}
 `;
 
 export default NavBar;

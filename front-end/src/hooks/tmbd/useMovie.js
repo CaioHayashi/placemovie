@@ -1,14 +1,28 @@
-import tmdbApi from "../api/tmdb";
+import tmdbApi from "../../api/tmdb";
 
-export const getMovies = async (page = 1, search) => {
+export const getMovies = async (page = 1, search, selectedGenre) => {
+	console.log(page, search, selectedGenre)
+
+	if(selectedGenre) {
+		const response = await tmdbApi.get("/discover/movie", {
+			params: {
+				with_genres: selectedGenre,
+				language: "pt-BR"
+			}
+		});
+
+		return response.data.results;
+	}
+
 	try {
-		// Se houver uma pesquisa, utiliza a rota de pesquisa
+		// Se houver uma pesquisa, utiliza a rota de pesquis
+
 		const response = search
 			? await tmdbApi.get("/search/movie", {
 					// Rota de pesquisa
 					params: {
 						page,
-						query: search, // Parâmetro de consulta
+						query: search,
 						language: "pt-BR"
 					}
 			  })
@@ -16,9 +30,11 @@ export const getMovies = async (page = 1, search) => {
 					// Rota de filmes populares
 					params: {
 						page,
+						region: "BR",
 						language: "pt-BR"
 					}
 			  });
+
 		return response.data.results;
 	} catch (error) {
 		console.error(
@@ -27,6 +43,19 @@ export const getMovies = async (page = 1, search) => {
 		);
 		return [];
 	}
+};
+
+export const getGenres = async () => {
+	const response = await tmdbApi.get(
+		`https://api.themoviedb.org/3/genre/movie/list?`,
+		{
+			params: {
+				language: "pt-BR"
+			}
+		}
+	);
+
+	return response.data.genres; // Retorna uma lista de gêneros com id e nome
 };
 
 export const getMovieDetails = async (id) => {
@@ -126,20 +155,24 @@ export const getMoviesById = async (moviesIds) => {
 	}
 };
 
+export const getMoviesByIds = async (moviesId) => {
+	try {
+		const resquests = moviesId.map(async (movie) => {
+			const response = await tmdbApi
+				.get(`/movie/${movie}?`, {
+					params: {
+						language: "pt-BR",
+						append_to_response: "videos,watch/providers"
+					}
+				});
+			return response.data;
+		});
 
-// export const getMoviesByIds = async (movieIds) => {
-// 	try {
-// 		const response = await tmdbApi.get("/movies", {
-// 			params: {
-// 				api_key: "8d7080dff33cefafcdbfaa4d90d95064",
-// 				language: "pt-BR", // Idioma para a resposta
-// 				width_ids: movieIds.join(",") // Passando os IDs dos filmes como string separada por vírgulas
-// 			}
-// 		});
-// 		return response.data; // Retorna os dados dos filmes
-// 	} catch (error) {
-// 		console.error("Erro ao buscar filmes:", error);
-// 		return [];
-// 	}
-// };
+		const moviesData = await Promise.all(resquests);
+		return moviesData; // Retorna os dados dos filmes
+	} catch (error) {
+		console.error("Erro ao buscar filmes:", error);
+		return [];
+	}
+};
 

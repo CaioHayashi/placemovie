@@ -2,42 +2,70 @@ import React from "react";
 import { Routes, Route } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import { Details } from "./Details";
-import {  LikesList } from "./LikesList";
+import { LikesList } from "./LikesList";
 import styled from "styled-components";
 import { useAuth } from "../../hooks/useAuth";
+import bg from "../../assets/bg_profile.png";
+import { motion } from "framer-motion";
+import NavBarLogin from "../../components/NavBarLogin";
 
 export const Profile = () => {
 	const { user } = useAuth();
 
 	return (
-		<ProfilePageContainer>
-			{/* Sidebar fixa à esquerda */}
-			<Sidebar />
-
-			{/* Área principal que será alterada conforme a navegação */}
-			<ContentContainer>
-				<Routes>
-					<Route path="/details" element={<Details user={user} />} />
-					<Route
-						path="/likesList"
-						element={<LikesList user={user} />}
-					/>
-				</Routes>
-			</ContentContainer>
-		</ProfilePageContainer>
+		<Page
+			initial={{ opacity: 0, X: -100 }}
+			animate={{ opacity: 1, X: 0 }}
+			exit={{ opacity: 0, X: -100 }}
+			transition={{ duration: 0.5 }}
+		>
+			<NavBarLogin var2/>
+			<BgImage src={bg} />
+			<ContainerPage>
+				<Sidebar />
+				<Content>
+					<Routes>
+						<Route
+							path="/details"
+							element={<Details user={user} />}
+						/>
+						<Route
+							path="/likeslist"
+							element={<LikesList user={user} />}
+						/>
+					</Routes>
+				</Content>
+			</ContainerPage>
+		</Page>
 	);
 };
 
-const ProfilePageContainer = styled.div`
+const Page = styled(motion.div)`
 	display: flex;
-	justify-content: center;
-	align-items: center;
+	flex-direction: column;
 	min-height: 100vh;
 `;
 
-const ContentContainer = styled.div`
-	background-color: var(--primary-t);
-	min-width: 1200px;
-	padding: 20px;
-	height: 100%;
+const ContainerPage = styled.div`
+	display: flex;
+	flex-wrap: wrap;
+	width: 100%;
+	flex: 1;
+`;
+
+const BgImage = styled.img`
+	position: fixed;
+	width: 100vw;
+	height: 100vh;
+	object-fit: cover;
+	z-index: -1;
+`;
+
+const Content = styled.div`
+	flex: 6 1 700px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	margin: 0 5%;
+	overflow-y: auto;
 `;

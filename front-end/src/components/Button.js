@@ -1,9 +1,16 @@
 import React from "react";
 import styled from "styled-components";
 
-export const Button = ({ children, width, onClick, disabled }) => {
+export const Button = ({
+	type = "text",
+	children,
+	width,
+	onClick,
+	disabled
+}) => {
 	return (
 		<Container
+			type={type}
 			disabled={disabled}
 			onClick={onClick}
 			style={{ width: width }}

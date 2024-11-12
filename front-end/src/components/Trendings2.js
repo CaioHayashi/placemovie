@@ -1,30 +1,29 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { getMoviesByGenre } from "../hooks/tmbd/useMovie"; // Função que você pode criar para pegar os filmes de terror
+import { getTrendings } from "../hooks/tmbd/useMovie";
 import { useNavigate } from "react-router-dom";
-import { Button } from "../components/Button";
+import { Button } from "./Button";
 import { motion } from "framer-motion";
 
-export const HorrorMovies = () => {
+export const Trendings = ({fetchData} ) => {
 	const navigate = useNavigate();
-	const [movies, setMovies] = useState([]);
-	const [mainMovie, setMainMovie] = useState();
+	const [trendings, setTrendings] = useState([]);
+	const [mainTrend, setMainTrend] = useState();
 
 	const imageBaseUrl = "https://image.tmdb.org/t/p/original";
 
 	useEffect(() => {
-		const fetchHorrorMovies = async () => {
-			// Aqui você deve passar o id do gênero de terror e ordenar pelos melhores avaliados
-			const data = await getMoviesByGenre(27); // 27 é o ID do gênero de terror
-			setMovies(data);
-			setMainMovie(data[0]);
+		const fetchTrendings = async () => {
+			const data = await getTrendings();
+			setTrendings(data); // Armazena os dados no estado
+			setMainTrend(data[0]);
 		};
 
-		fetchHorrorMovies();
+		fetchTrendings();
 	}, []);
 
-	const handleMainMovie = (movie) => {
-		setMainMovie(movie);
+	const handleMainTrendings = (movie) => {
+		setMainTrend(movie);
 	};
 
 	const handleMovieDetails = (id) => {
@@ -34,31 +33,31 @@ export const HorrorMovies = () => {
 	return (
 		<Container>
 			<Title>
-				#Top5 Filmes para Curtir o <Label>Halloween</Label>
+				#Top5 Filmes da <Label>Semana</Label>
 			</Title>
 			<Main
-				$imageUrl={`${imageBaseUrl}${mainMovie?.backdrop_path}`}
-				key={mainMovie?.id}
+				$imageUrl={`${imageBaseUrl}${mainTrend?.backdrop_path}`}
+				key={mainTrend?.id}
 				initial={{ opacity: 0, x: -100 }}
 				animate={{ opacity: 1, x: 0 }}
 				exit={{ opacity: 0, x: -100 }}
 				transition={{ duration: 0.5 }}
 			>
-				<h2>{mainMovie?.title}</h2>
-				<p style={{ maxWidth: "400px" }}>{mainMovie?.overview}</p>
+				<h2>{mainTrend?.title}</h2>
+				<p style={{ maxWidth: "400px" }}>{mainTrend?.overview}</p>
 				<Button
 					width="fit-content"
-					onClick={() => handleMovieDetails(mainMovie?.id)}
+					onClick={() => handleMovieDetails(mainTrend?.id)}
 				>
 					Ver Mais
 				</Button>
 			</Main>
 			<Cards>
-				{movies?.map((movie) => (
+				{trendings?.map((movie) => (
 					<Card
 						key={movie.id}
-						$isActive={movie.id === mainMovie?.id}
-						onClick={() => handleMainMovie(movie)}
+						$isActive={movie.id === mainTrend?.id}
+						onClick={() => handleMainTrendings(movie)}
 						$imageUrl={`${imageBaseUrl}${movie?.poster_path}`}
 					></Card>
 				))}
@@ -66,8 +65,6 @@ export const HorrorMovies = () => {
 		</Container>
 	);
 };
-
-// O restante do código para estilização continua igual
 
 const Container = styled.section`
 	width: 100%;
@@ -87,6 +84,7 @@ const Title = styled.h1`
 const Main = styled(motion.section)`
 	width: 100%;
 	aspect-ratio: 11/3;
+	/* max-height: 500px; */
 	background-image: linear-gradient(90deg, var(--primary), transparent),
 		url(${(props) => props.$imageUrl});
 	background-size: cover;
@@ -99,7 +97,7 @@ const Main = styled(motion.section)`
 	justify-content: center;
 	gap: 12px;
 	box-shadow: 0 4px 8px #000000cc;
-
+	
 	@media (max-width: 600px) {
 		aspect-ratio: 5/8;
 	}
@@ -139,6 +137,7 @@ const Card = styled.div`
 		transform: scale(1.05);
 	}
 `;
+
 const Label = styled.label`
 	color: var(--quinary);
 `;

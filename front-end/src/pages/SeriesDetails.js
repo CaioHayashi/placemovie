@@ -1,36 +1,39 @@
 import React, { useEffect, useState } from "react";
 import { NavLink, useParams } from "react-router-dom";
-import { getMovieDetails } from "../hooks/tmbd/useMovie";
 import styled from "styled-components";
 import { motion } from "framer-motion";
 import { Loading } from "./Loading";
-import { FormatCurrency } from "../hooks/FormatCurrency";
 import { TextDetails } from "../components/TextDetails";
-import { MoviesComments } from "../components/MoviesComments";
-import LikeMovieButton from "../components/LikeMovieButton";
 import { useAuth } from "../hooks/useAuth";
 import NavBarLogin from "../components/NavBarLogin";
 import { ProviderButton } from "../components/ProviderButton";
+import { getSeriesDetails } from "../hooks/tmbd/useSeries";
+import { SeriesComments } from "../components/SeriesComments";
+import LikeSerieButton from "../components/LikeSerieButton";
 
-const MoviesDetails = () => {
+const SeriesDetails = () => {
 	const { user } = useAuth();
 	const { id } = useParams();
-	const [movie, setMovie] = useState(null);
+	const [serie, setSerie] = useState(null);
 
 	const imageBaseUrl = "https://image.tmdb.org/t/p/original";
-	const providers = movie?.["watch/providers"]?.results?.BR?.flatrate;
-	const trailer = movie?.videos.results[0]; // Pega o primeiro trailer
+	const providers = serie?.["watch/providers"]?.results?.BR?.flatrate;
+	const trailer = serie?.videos.results[0]; // Pega o primeiro trailer
+
+	console.log(serie?.["watchproviders".results]);
 
 	useEffect(() => {
-		const fetchMovieDetails = async () => {
-			const data = await getMovieDetails(id);
-			setMovie(data);
+		const fetchSerieDetails = async () => {
+			const data = await getSeriesDetails(id);
+
+			console.log(data);
+			setSerie(data);
 		};
 
-		fetchMovieDetails();
+		fetchSerieDetails();
 	}, [id]);
 
-	if (!movie) return <Loading />;
+	if (!serie) return <Loading />;
 
 	return (
 		<Page
@@ -40,43 +43,62 @@ const MoviesDetails = () => {
 			transition={{ duration: 0.5 }}
 		>
 			<NavBarLogin />
-			<BgImage src={`${imageBaseUrl}${movie.backdrop_path}`} />
+			<BgImage src={`${imageBaseUrl}${serie.backdrop_path}`} />
+
 			<Banner>
 				<Line>
 					<BannerText>
-						<h1 style={{ fontSize: "56px" }}>{movie.title}</h1>
+						<h1 style={{ fontSize: "56px" }}>
+							{serie.original_name}
+						</h1>
 						<p style={{ fontWeight: "bold" }}>
-							{movie.genres
+							{serie.genres
 								.map((genre) => genre.name)
 								.join(" - ")}
 						</p>
-						<p style={{ maxWidth: "800px", fontSize: "24px" }}>
-							{movie?.overview}
+						<p style={{ maxWidth: "500px", fontSize: "24px" }}>
+							{serie.overview}
 						</p>
 						<Providers>
 							{providers?.map((provider) => (
 								<ProviderButton
 									provider={provider}
-									key={provider.id} data={provider}
+									key={provider.id}
 								/>
 							))}
 						</Providers>
 					</BannerText>
 					<Like>
 						{!user && (
-							<NavLink to="/login" style={{fontSize: ".8rem"}}>
+							<NavLink to="/login" style={{ fontSize: ".8rem" }}>
 								Entre para curtir e adicionar filmes à sua
 								lista!
 							</NavLink>
 						)}
-						<LikeMovieButton
-							movieId={id}
+						<LikeSerieButton
+							serieId={id}
 							userId={user?.id}
 							disabled={!user}
 						/>
 					</Like>
 				</Line>
 			</Banner>
+
+			<ContainerSeasons>
+				<h1>Temporadas</h1>
+				<Seasons>
+					{serie.seasons?.map((season) => (
+						<SeasonCard key={season.id}>
+							<SeasonImage
+								src={`https://image.tmdb.org/t/p/w200${season.poster_path}`}
+								alt={season.name}
+							/>
+							<p>{season.name}</p>
+							<p>{season.episode_count} episódios</p>
+						</SeasonCard>
+					))}
+				</Seasons>
+			</ContainerSeasons>
 
 			<About>
 				{trailer && (
@@ -92,39 +114,39 @@ const MoviesDetails = () => {
 
 				<GridData>
 					<TextDetails
-						title="Data de Lançamento"
-						data={movie.release_date}
+						title="Último Episódio"
+						data={serie.last_air_date}
 					/>
 					<TextDetails
-						title="Duração"
-						data={`${movie.runtime} minutos`}
+						title="Epsódios"
+						data={`${serie.number_of_episodes}`}
 					/>
 					<TextDetails
 						title="Média de Avaliação"
-						data={movie.vote_average}
+						data={serie.vote_average}
 					/>
 					<TextDetails
 						title="Número de Avaliações"
-						data={movie.vote_count}
+						data={serie.vote_count}
 					/>
 					<TextDetails
 						title="Idioma Original"
-						data={movie.original_language}
+						data={serie.original_language}
 					/>
-					<TextDetails
+					{/* <TextDetails
 						title="Orçamento"
-						data={FormatCurrency(movie.budget)}
+						data={FormatCurrency(serie.budget)}
 					/>
 					<TextDetails
 						title="Receita"
-						data={FormatCurrency(movie.revenue)}
-					/>
+						data={FormatCurrency(serie.revenue)}
+					/> */}
 				</GridData>
 			</About>
 
 			{id && (
 				<ContainerComennts>
-					<MoviesComments movieId={id} />
+					<SeriesComments movieId={id} />
 				</ContainerComennts>
 			)}
 		</Page>
@@ -154,9 +176,9 @@ const Banner = styled(motion.section)`
 	flex-direction: column;
 	justify-content: end;
 	align-items: start;
-	padding: 4% 10%;
+	padding: 5% 10%;
 	width: 100%;
-	min-height: 90vh;
+	min-height: 95vh;
 	background-size: cover;
 	background-position: center;
 	background-image: linear-gradient(360deg, var(--primary-t), transparent);
@@ -207,4 +229,38 @@ const Like = styled.div`
 	right: 5%;
 `;
 
-export default MoviesDetails;
+const ContainerSeasons = styled.section`
+	display: flex;
+	flex-direction: column;
+	overflow: hidden; /* Impede que o conteúdo transborde */
+	background-color: var(--primary-t);
+	padding: 20px 5%;
+`;
+
+const Seasons = styled.section`
+	display: flex;
+	gap: 20px;
+	padding: 20px;
+	overflow-x: scroll;
+	scroll-snap-type: x mandatory;
+	::-webkit-scrollbar {
+		display: none;
+	}
+	-ms-overflow-style: none; /* Para o IE 10+ */
+	scrollbar-width: none; /* Para Firefox */
+`;
+
+const SeasonCard = styled.div`
+	flex-shrink: 0;
+	width: 200px;
+	text-align: center;
+	margin-left: 20px; /* Margem à esquerda no item */
+	scroll-snap-align: start;
+`;
+
+const SeasonImage = styled.img`
+	width: 100%;
+	border-radius: 8px;
+`;
+
+export default SeriesDetails;

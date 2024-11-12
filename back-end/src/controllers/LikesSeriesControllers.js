@@ -1,16 +1,14 @@
 import supabase from "../../db/supabase.js";
 
-export const toggleMovieLike = async (request, response) => {
-	const { movieId: id_movie_ref, userId: id_user } = request.body;
-
-	console.log(id_movie_ref, id_user);
+export const toggleLikeSerie = async (request, response) => {
+	const { serieId: id_serie_ref, userId: id_user } = request.body;
 
 	try {
 		// Verifica se o like já existe sem usar .single()
 		const { data: existingLikes, error: fetchError } = await supabase
 			.from("likes")
 			.select("*")
-			.eq("id_movie_ref", id_movie_ref)
+			.eq("id_serie_ref", id_serie_ref)
 			.eq("id_user", id_user);
 
 		if (fetchError) {
@@ -25,7 +23,7 @@ export const toggleMovieLike = async (request, response) => {
 			const { error: deleteError } = await supabase
 				.from("likes") // Corrigido para a tabela correta
 				.delete()
-				.eq("id_movie_ref", id_movie_ref)
+				.eq("id_serie_ref", id_serie_ref)
 				.eq("id_user", id_user);
 
 			if (deleteError) {
@@ -39,7 +37,7 @@ export const toggleMovieLike = async (request, response) => {
 			// Se o like não existe, adiciona-o (curtir)
 			const { error: insertError } = await supabase
 				.from("likes")
-				.insert([{ id_movie_ref, id_user }]);
+				.insert([{ id_serie_ref, id_user }]);
 
 			if (insertError) {
 				console.log(insertError);
@@ -55,14 +53,14 @@ export const toggleMovieLike = async (request, response) => {
 	}
 };
 
-export const getLikeStart = async (request, response) => {
-	const { movieId, userId } = request.query;
+export const getLikeSerieStart = async (request, response) => {
+	const { serieId, userId } = request.query;
 
 	try {
 		const { data: existingLikes, error: fetchError } = await supabase
 			.from("likes")
 			.select("*")
-			.eq("id_movie_ref", movieId)
+			.eq("id_serie_ref", serieId)
 			.eq("id_user", userId);
 
 		if (fetchError) {
@@ -81,7 +79,7 @@ export const getLikeStart = async (request, response) => {
 	}
 };
 
-export const getLikesList = async (request, response) => {
+export const getLikesSerieList = async (request, response) => {
 	const { id_user } = request.query; // Use request.query para acessar parâmetros de query
 
 	if (!id_user) {
@@ -92,8 +90,9 @@ export const getLikesList = async (request, response) => {
 	try {
 		const { data: list, error } = await supabase
 			.from("likes")
-			.select("id_movie_ref")
-			.eq("id_user", id_user); // Corrigir a condição para comparar com id_user
+			.select("id_serie_ref")
+			.eq("id_user", id_user)
+			.order("created_at", { ascending: false }); // Corrigir a condição para comparar com id_user
 		if (error) {
 			console.log(error);
 			return response.status(500).json({ msg: error.message });

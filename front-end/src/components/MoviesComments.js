@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import api from "../api/backend";
 import { useNavigate } from "react-router-dom"; // Importar o useNavigate
@@ -7,13 +7,14 @@ import { Button } from "./Button";
 import { formatDate } from "../util/formatDate";
 import { motion } from "framer-motion";
 
-export const Comments = ({ movieId }) => {
+export const MoviesComments = ({ movieId }) => {
 	const { user } = useAuth(); // Obtendo o usuário logado
 	const [comments, setComments] = useState([]);
 	const [content, setContent] = useState(""); // Estado para o conteúdo do comentário
 	const navigate = useNavigate(); // Hook para navegação
+	
+	console.log(movieId)
 
-	// Função para buscar os comentários
 	// Função para enviar um comentário
 	const handleCommentSubmit = async (e) => {
 		e.preventDefault();
@@ -26,8 +27,8 @@ export const Comments = ({ movieId }) => {
 
 		try {
 			// Envia o comentário
-			await api.post("/comments", {
-				content,
+			await api.post("/movies/comments", {
+				content: content,
 				id_user: user.id,
 				id_movie_ref: movieId
 			});
@@ -43,14 +44,16 @@ export const Comments = ({ movieId }) => {
 	};
 
 	// Função para buscar comentários
-	const fetchComments = async () => {
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	const fetchComments = useCallback(async () => {
 		try {
-			const response = await api.get(`/comments?id_movie_ref=${movieId}`);
+			const response = await api.get(`/movies/comments?id_movie_ref=${movieId}`);
+			console.log(response)
 			setComments(response.data.comments); // Atualiza a lista de comentários
 		} catch (error) {
 			console.error("Erro ao buscar comentários:", error);
 		}
-	};
+	});
 
 	// Chame fetchComments no useEffect para carregar os comentários inicialmente
 	useEffect(() => {
@@ -99,7 +102,8 @@ export const Comments = ({ movieId }) => {
 					<ScrollableContainer>
 						{comments?.map((comment, i) => (
 							<Comment
-								key={comment?.id}
+								data={comment}
+								key={comment.id}
 								initial={{ opacity: 0, x: -20 }} // Estado inicial
 								animate={{ opacity: 1, x: 0 }} // Estado final
 								exit={{ opacity: 0, x: 20 }} // Estado ao sair
@@ -136,7 +140,6 @@ const Container = styled.div`
 const Content = styled.div`
 	display: flex;
 	flex-direction: row;
-	align-items: center;
 	gap: 50px;
 	flex-wrap: wrap;
 `;

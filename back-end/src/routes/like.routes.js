@@ -1,10 +1,15 @@
 import { Router } from "express";
-import { getLikeStart, toggleMovieLike, getLikesList } from "../controllers/LikesControllers.js";
+import { getLikeMovieStart, toggleLikeMovie, getLikesMovieList } from "../controllers/LikesMoviesControllers.js";
+import { getLikeSerieStart, toggleLikeSerie, getLikesSerieList } from "../controllers/LikesSeriesControllers.js";
 
 const route = Router()
 
-route.post("/", toggleMovieLike)
-route.get("/", getLikeStart)
-route.get("/list", getLikesList);
+route.post("/movies", toggleLikeMovie);
+route.get("/movies", getLikeMovieStart)
+route.get("/movies/list", getLikesMovieList);
+
+route.post("/series", toggleLikeSerie);
+route.get("/series", getLikeSerieStart);
+route.get("/series/list", getLikesSerieList);
 
 export default route

@@ -7,7 +7,8 @@ import { Home } from "./Home";
 import Movies from "./Movies";
 import MoviesDetails from "./MoviesDetails";
 import { Profile } from "./Profile";
-
+import Series from "./Series";
+import SeriesDetails from "./SeriesDetails";
 
 export const AnimateRoutes = () => {
 	const location = useLocation();
@@ -18,7 +19,9 @@ export const AnimateRoutes = () => {
 				<Route path="/register" element={<Register />} />
 				<Route path="/" element={<Home />} />
 				<Route path="/movies" element={<Movies />} />
+				<Route path="/series" element={<Series />} />
 				<Route path="/movies/:id" element={<MoviesDetails />} />
+				<Route path="/series/:id" element={<SeriesDetails />} />
 				<Route path="/profile/*" element={<Profile />} />
 			</Routes>
 		</AnimatePresence>

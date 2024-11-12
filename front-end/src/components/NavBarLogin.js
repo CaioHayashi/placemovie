@@ -4,32 +4,43 @@ import styled from "styled-components";
 import { useAuth } from "../hooks/useAuth";
 import logo from "../assets/logo-placemovie.svg";
 import { IoPersonCircleSharp } from "react-icons/io5";
+import { IoCloseSharp } from "react-icons/io5";
 
-
-const NavBarLogin = () => {
-	const { user, signOut } = useAuth();
+const NavBarLogin = ({ var2 }) => {
+	const { user } = useAuth();
 	return (
 		<>
-			{!user ? (
-				<Container>
-					<img src={logo} alt="logo" width="100px" />
-					<div>
-						<NavLink to="/login" style={{ padding: "12px" }}>
-							Entrar
+			{!var2 ? (
+				!user ? (
+					<Container>
+						<img src={logo} alt="logo" width="100px" />
+						<div>
+							<NavLink to="/login" style={{ padding: "12px" }}>
+								Entrar
+							</NavLink>
+							<NavLink to="/register" style={{ padding: "12px" }}>
+								Cadastre-se
+							</NavLink>
+						</div>
+					</Container>
+				) : (
+					<Container>
+						<img src={logo} alt="logo" width="80px" />
+
+						<NavLink to="/profile/likeslist">
+							<IoPersonCircleSharp
+								size={44}
+								color={"var(--quaternary)"}
+							/>
 						</NavLink>
-						<NavLink to="/register" style={{ padding: "12px" }}>
-							Cadastre-se
-						</NavLink>
-					</div>
-				</Container>
+					</Container>
+				)
 			) : (
 				<Container>
-					<img src={logo} alt="logo" width="100px" />
-					{/* <label style={{ padding: "12px" }} onClick={signOut}>
-						Sair
-					</label> */}
-					<NavLink to="/profile/details">
-						<IoPersonCircleSharp size={54} color={"var(--quaternary)"}/>
+					<img src={logo} alt="logo" width="80px" />
+
+					<NavLink to="/">
+						<IoCloseSharp size={44} color={"var(--quaternary)"} />
 					</NavLink>
 				</Container>
 			)}
@@ -38,7 +49,7 @@ const NavBarLogin = () => {
 };
 
 const Container = styled.div`
-	padding: 20px;
+	padding: 20px 5%;
 	display: flex;
 	width: 100%;
 	justify-content: space-between;

@@ -10,7 +10,7 @@ import api from "../api/backend";
 import { useAuth } from "../hooks/useAuth";
 
 export const Register = () => {
-	const [name, setName] = useState("");
+	const [username, setUsername] = useState("");
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 
@@ -21,14 +21,14 @@ export const Register = () => {
 		e.preventDefault();
 
 		try {
-			const res = await api.post("/users", { name, email, password });
+			const res = await api.post("/users", { username, email, password });
 			console.log("Usuário criado:", res.data); // Verifique os dados retornados
 
 			if (res.status === 200 || res.status === 201) {
 				console.log(email, password);
 				await signIn({ email, password });
-
-				navegate(-1);
+				alert("Conta criada com sucesso!")
+				navegate("/");
 			}
 		} catch (error) {
 			console.error(
@@ -69,8 +69,8 @@ export const Register = () => {
 					<label>Nome de usuário:</label>
 					<Input
 						type="text"
-						value={name}
-						onChange={(e) => setName(e.target.value)}
+						value={username}
+						onChange={(e) => setUsername(e.target.value)}
 						placeholder="Digite seu usuário"
 					/>
 				</ContainerInput>

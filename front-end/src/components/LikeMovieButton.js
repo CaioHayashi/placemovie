@@ -3,13 +3,13 @@ import api from "../api/backend";
 import { IoHeartSharp, IoHeartOutline } from "react-icons/io5";
 import styled from "styled-components";
 
-const LikeButton = ({ movieId, userId, disabled }) => {
+const LikeMovieButton = ({ movieId, userId, disabled }) => {
 	const [liked, setLiked] = useState(false); // Estado para saber se o filme está curtido
 
 	// Função para alternar o like
 	const handleToggleLike = async () => {
 		try {
-			const response = await api.post("/likes", {
+			const response = await api.post("/likes/movies", {
 				movieId,
 				userId
 			});
@@ -21,22 +21,22 @@ const LikeButton = ({ movieId, userId, disabled }) => {
 		}
 	};
 
-	const fetchLike = async () => {
-		try {
-			const response = await api.get("/likes", {
-				params: { movieId, userId }
-			});
-
-			// Define o estado 'liked' conforme a resposta da API
-			setLiked(response.data.liked);
-		} catch (error) {
-			console.log("Erro ao buscar status do like:", error);
-		}
-	};
-
 	useEffect(() => {
+		const fetchLike = async () => {
+			try {
+				const response = await api.get("/likes/movies", {
+					params: { movieId, userId }
+				});
+
+				// Define o estado 'liked' conforme a resposta da API
+				setLiked(response.data.liked);
+			} catch (error) {
+				console.log("Erro ao buscar status do like:", error);
+			}
+		};
+
 		fetchLike();
-	}, []);
+	}, [movieId, userId]);
 
 	return (
 		<Container onClick={handleToggleLike} disabled={disabled}>
@@ -52,8 +52,14 @@ const LikeButton = ({ movieId, userId, disabled }) => {
 };
 
 const Container = styled.button`
+	cursor: pointer;
 	width: fit-content;
+	transition: all 0.3s;
 	background-color: transparent;
+	filter: drop-shadow(0 0 10px var(--secondary));
+	&:hover {
+		scale: 1.2;
+	}
 `;
 
-export default LikeButton;
+export default LikeMovieButton;

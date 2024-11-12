@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import { useAuth } from "../hooks/useAuth";
 import { motion } from "framer-motion";
 import NavBar from "../components/NavBar";
 
@@ -9,21 +8,21 @@ import { Trendings } from "../components/Trendings";
 import { HorrorMovies } from "../components/HorrorMovies";
 
 export const Home = () => {
-	const { user } = useAuth();
 
 	return (
 		<Page
-			initial={{ opacity: 0, y: -100 }}
-			animate={{ opacity: 1, y: 0 }}
-			exit={{ opacity: 0, y: -100 }}
+			initial={{ opacity: 0, x: -100 }}
+			animate={{ opacity: 1, x: 0 }}
+			exit={{ opacity: 0, x: -100 }}
 			transition={{ duration: 0.5 }}
 		>
 			<Banner>
 				<NavBarLogin />
 				<p
 					style={{
-						fontSize: "54px",
-						width: "500px",
+						fontSize: "3rem",
+						maxWidth: "500px",
+						margin: "20px",
 						alignItems: "center",
 						fontWeight: "lighter"
 					}}
@@ -61,7 +60,8 @@ const Banner = styled.div`
 	align-items: center;
 	justify-content: space-between;
 	width: 100%;
-	height: 80vh;
+	aspect-ratio: 8/3;
+	min-height: 600px;
 	background-color: #333;
 	background-image: url(${banner});
 	background-size: cover;
@@ -71,18 +71,10 @@ const Banner = styled.div`
 const Main = styled.main`
 	display: flex;
 	flex-direction: column;
-	gap: 70px;
-	margin: 5% 10%;
+	gap: 40px;
+	margin: 40px 0;
 `;
 
 const Bold = styled.label`
 	font-weight: bold;
-`;
-
-const HeaderSection = styled.h1`
-	padding: 20px 30px;
-	border-radius: 12px;
-	color: white;
-	font-size: 1.8rem;
-	text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
 `;
